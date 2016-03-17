@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Click Button with Firebase!</title>
+
+    <!-- This is the reference to firebase CDN  -->
+    <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+</head>
+<body>
+
+    <!-- The only headline on the page h1 tag  -->
+    <h1>Ouch! You've clicked me <span id="clickValue"></span> times!</h1>
+   	<!-- This is the click button to increment the values up -->
+    <button id="clickButton">Click Me!!!!</button>
+
+    <!-- The script to use jquery -->
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+
+    <!-- The start of our new javaScript -->
+    <script>
+
+    // This is where we declare variables the first one is to link to our firebase database
+    var clickData = new Firebase("https://week7.firebaseio.com/");
+
+    // This is where we start the click counter at zero
+    var clickCounter = 0;    
+    
+    // The onClick event that ref the clickButton
+    $("#clickButton").on("click", function() {
+
+        // Adds one to the click counter
+        clickCounter++;
+
+        // Appends the data to the firebase clickCount field
+        clickData.set({
+            clickCount: clickCounter
+        });
+    })
+
+    // stores the clickData value into the function
+    clickData.on("value", function(snapshot) {
+
+        // logs the value of the function to the console
+        console.log(snapshot.val());
+
+        // adds the value of the clickCount to the id of clickValue
+        $("#clickValue").html(snapshot.val().clickCount);
+
+        // gives the total value of the clickCount
+        clickCounter = snapshot.val().clickCount;
+
+    // function that shows if there are any errors in the connection.
+    }, function (errorObject) {
+
+        // logs the error code to the console
+          console.log("The read failed: " + errorObject.code);
+    
+    });
+
+    </script>
+
+</body>
+</html>
